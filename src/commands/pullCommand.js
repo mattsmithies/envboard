@@ -17,8 +17,6 @@ module.exports.process = async ({ reference, password }) => {
 
   const { filename, content, message } = response.data.data;
 
-  // console.log(response.data.data);
-
   if (message === 'not found') {
     return console.log(chalk.yellow('NOT FOUND: Check that the reference is correct or the file has been downloaded already'));
   }
