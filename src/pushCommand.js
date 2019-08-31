@@ -7,8 +7,8 @@ const chalk = require('chalk')
 const fs = require('fs')
 const uuidv4 = require('uuid/v4')
 
-const { encryptAndStore } = require('security/encryption')
-const { pushRoute } = require('api')
+const { encryptAndStore } = require('./encryption')
+const { pushRoute } = require('./apiRoutes')
 
 const uploadFile = async ({ filepath, email, company }, onSuccessUpload) => {
 

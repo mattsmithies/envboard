@@ -4,8 +4,8 @@ const Axios = require('axios')
 const fs = require('fs')
 const chalk = require('chalk')
 
-const { decrypt } = require('security/encryption')
-const { pullRoute, deleteRoute } = require('api')
+const { decrypt } = require('./encryption')
+const { pullRoute, deleteRoute } = require('./apiRoutes')
 
 module.exports.process = async ({ reference, password }) => {
 

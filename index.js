@@ -4,8 +4,8 @@ const chalk = require('chalk')
 const fs = require('fs')
 const emailValidator = require("email-validator")
 
-const PullCommand = require('commands/pullCommand')
-const PushCommand = require('commands/pushCommand')
+const PullCommand = require('./src/pullCommand')
+const PushCommand = require('./src/pushCommand')
 
 const program = new commander.Command()
 

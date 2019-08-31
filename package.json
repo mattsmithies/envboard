@@ -4,7 +4,6 @@
   "description": "Envboard CLI interface",
   "main": "index.js",
   "scripts": {
-    "postinstall": "link-module-alias",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,13 +27,5 @@
     "form-data": "^2.5.1",
     "inquirer": "^7.0.0",
     "uuid": "^3.3.3"
-  },
-  "devDependencies": {
-    "link-module-alias": "^1.2.0"
-  },
-  "_moduleAliases": {
-    "security": "./src/security",
-    "commands": "./src/commands",
-    "api": "./src/api"
   }
 }
