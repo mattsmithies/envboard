@@ -1,54 +1,44 @@
-const crypto = require('crypto');
+const Crypto = require('crypto');
 const fs = require('fs');
-const path = require('path');
-const zlib = require('zlib');
 
-const InitialisationVector = require('./initialisationVector');
+const encrypt = (text, key) => {
+  const iv = Crypto.randomBytes(16);
+  const cipher = Crypto.createCipheriv('aes256', new Buffer(key), iv);
+  const encrypted = cipher.update(text);
+  const finalBuffer = Buffer.concat([encrypted, cipher.final()]);
+  //Need to retain IV for decryption, so this can be appended to the output with a separator (non-hex for this example)
+  const encryptedHex = iv.toString('base64') + ':' + finalBuffer.toString('base64')
 
-const getCipherKey = (password) => {
-  return crypto.createHash('sha256').update(password).digest();
+  return encryptedHex;
 }
 
-module.exports.encrypt = ({ file, password }) => {
-  // Generate a secure, pseudo random initialization vector.
-  const initVect = crypto.randomBytes(16);
+const decrypt = (encryptedText, key) => {
+  try {
 
-  // Generate a cipher key from the password.
-  const CIPHER_KEY = getCipherKey(password);
-  const readStream = fs.createReadStream(file);
-  const gzip = zlib.createGzip();
-  const cipher = crypto.createCipheriv('aes256', CIPHER_KEY, initVect);
-  const appendInitVect = new InitialisationVector(initVect);
-  // Create a write stream with a different file extension.
-  const writeStream = fs.createWriteStream(path.join(file + ".enc"));
+    const encryptedArray = encryptedText.split(':');
+    const iv = new Buffer(encryptedArray[0], 'base64');
+    const encrypted = new Buffer(encryptedArray[1], 'base64');
+    const decipher = Crypto.createDecipheriv('aes256', new Buffer(key), iv);
+    const decrypted = decipher.update(encrypted);
+    const clearText = Buffer.concat([decrypted, decipher.final()]).toString();
 
-  readStream
-    .pipe(gzip)
-    .pipe(cipher)
-    .pipe(appendInitVect)
-    .pipe(writeStream);
+    return clearText;
+
+  } catch (error) {
+    return false
+  }
 }
 
-module.exports.decrypt = ({ file, password }) => {
-  // First, get the initialization vector from the file.
-  const readInitVect = fs.createReadStream(file, { end: 15 });
+module.exports.encryptAndStore = ({ file, password }) => {
+  const text = fs.readFileSync(file, 'utf8')
 
-  let initVect;
-  readInitVect.on('data', (chunk) => {
-    initVect = chunk;
-  });
+  const encoded = encrypt(text, password);
 
-  // Once we’ve got the initialization vector, we can decrypt the file.
-  readInitVect.on('close', () => {
-    const cipherKey = getCipherKey(password);
-    const readStream = fs.createReadStream(file, { start: 16 });
-    const decipher = crypto.createDecipheriv('aes256', cipherKey, initVect);
-    const unzip = zlib.createUnzip();
-    const writeStream = fs.createWriteStream(file + '.unenc');
+  fs.writeFileSync(file + '.enc', encoded)
+}
 
-    readStream
-      .pipe(decipher)
-      .pipe(unzip)
-      .pipe(writeStream);
-  });
+module.exports.decrypt = ({ filename, encrypted, password }) => {
+  const text = decrypt(encrypted, password);
+
+  return text;
 }
