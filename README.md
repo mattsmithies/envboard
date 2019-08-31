@@ -29,7 +29,7 @@ Reduce frustration of your new developer and reduce the pressure on other team m
 
 Remove the problem "It works on my machine".
 
-This means ensuring that there is a documentation file that is kept up to date, this is a problem in many startups as there isn't time or a immediate need.
+This means ensuring that there is a documentation and environment files that is kept up to date, this is a problem in many startups as there isn't time or a immediate need.
 
 This is important, this will reduce the bus factor.
 
@@ -39,7 +39,6 @@ These would be some of the overarching targets, beyond the initial proof of conc
 - Share to team members and guests (that don’t need access to a GitHub)
 - Create specific env files and deploy to projects.
 - Eliminate the need for **.env** files in source control (this is super bad anyway!).
-- Share basic documentation and useful links, Postman.
 
 Fully encrypted. Reduce slack/email sharing.
 
@@ -55,47 +54,95 @@ This initial CLI tool is extremely simple, its goal is to prove the concept.
 2) Use the **envboard** CLI tool to generate a unique key, encrypt and email the zip to a developer.
 3) Once the file has been downloaded the files will be destroyed.
 4) Manually share the key to the desired user to decrypt the files.
+5) The downloaded file will have a **-envboard** suffix to not override any sensitive files that you may already have in your project.
 
-### Installation (Subject to change - not ready)
+### Installation
 
 ```
 npm i -g envboard
-cd project/
+cd your_project/
 ```
 
-### Send Environment Variables
+### "Push" a file to a developer
+
+Use:
 
 ```
-envboard -e .env -d README.md -s info@mattsmithies.co.uk
+envboard push <filepath>
 ```
 
-### Long form, descriptive names.
+This will display a CLI wizard workflow to enter the developer's email and company name.
+
+1) A unique password/key will be generated.
+2) The file will be encrypted with AES256 encryption.
+3) An email will be sent to the developer with a unique reference string.
+4) The password will need to be shared with the developer to decrypt the file.
+
+**Note**: The maximum size of a file can be 10kb.
 
 ```
-envboard --env .env --doc README.md --send info@mattsmithies.co.uk
+$ envboard push .env
+? [ 1 / 3 ] What is the email of the team member that you want to sent this to? info@mattsmithies.co.uk
+? [ 2 / 3 ] What is the company that you work for? Happy Titan
+? [ 3 / 3 ] The file will be encrypted locally, and then be sent to Envboard. You will need to manually send the generated password to the team member. Do you accept?
+Yes
+Generating Password...
+Encrypting file - env.example.enc...
+Uploading encrypted file to Envboard
+Email sent to info@mattsmithies.co.uk
+*-------------------------------------*
+Send this password to your team member:
+f3b37707448040999de9d29a240ca9bf
+*-------------------------------------*
+Cleaning up temporary files...
+
 ```
 
-### No documentation
+### "Pull" a file from Envboard
+
+Use:
 
 ```
-envboard --env .env --send info@mattsmithies.co.uk
+envboard pull
 ```
 
-### Generating and sending the key
+A CLI wizard will start for the unique reference to be entered and the password that is shared from the original developer.
 
-For now we'll expect to manually send the key to a developer via a separate email or messaging app.
+1) The reference looks up a file and downloads from **Envboard** (S3)
+2) The password is used to decrypt on the client-side.
+3) The remote file is deleted upon successful decryption.
+4) If another file is required simply ask for a team member to send another one.
 
 ```
-$ envboard -e .env -d README.md -s info@mattsmithies.co.uk
-Generating envboard key
-Preparing the zip with your files
-Sending the package
-Share this key with your developer to decrypt: sgrhqbr22nen6ded3q864m
+$ envboard pull
+? [ 1 / 2 ] What is the unique file reference you received?  7d79d9fc-4977-4814-8791-7a89a8ed4498:.env
+? [ 2 / 2 ] What is the generated password for the encrypted file? f3b37707448040999de9d29a240ca9bf
+Downloading encrypted file from Envboard
+Decrypting file and saving to - .env-envboard...
+Deleting remote encrypted file in Envboard
+```
+
+Once the file has been downloaded and decrypted once this will display if the same reference is used again. This will also show if the reference is incorrect.
+
+```
+...
+Downloading encrypted file from Envboard
+NOT FOUND: Check that the reference is correct or the file has been downloaded already
+```
+
+If the password is incorrect for the given reference this warning will appear, the file can still be downloaded.
+
+```
+...
+Downloading encrypted file from Envboard
+Unable to decrypt and save file
 ```
 
 ## Q & A
 
 Currently this is a proof of concept, and has been shared with various developers and CTOs. We want to check if this is something that is a real pain point to craft into a product.
+
+I consider the password to unlock the shared file to be a low risk item, and as such I fully expect it to be shared on slack or email. It can only be used once to download and decrypt the sensitive files.
 
 Lastly, would this functionality be worth $1 a month to you?
 
