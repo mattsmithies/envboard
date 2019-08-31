@@ -1,6 +1,6 @@
 {
   "name": "envboard",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Envboard CLI interface",
   "main": "index.js",
   "bin": "index.js",
