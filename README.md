@@ -1,5 +1,5 @@
 
-# Envboard - Send your environment to new developers.
+# Envboard - Securely send onboarding secrets to new developers.
 
 ## The Pain
 
