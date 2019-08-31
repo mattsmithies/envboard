@@ -32,9 +32,11 @@ module.exports.process = async ({ reference, password }) => {
     return console.log('Unable to decrypt and save file');
   }
 
-  console.log(chalk.green(`Decrypting file and saving to - ${filename}-envboard...`))
+  const savedFilename = filename + '-envboard'
 
-  fs.writeFileSync(filename, text)
+  console.log(chalk.green(`Decrypting file and saving to - ${savedFilename}...`))
+
+  fs.writeFileSync(savedFilename, text)
 
   console.log(chalk.magenta('Deleting remote encrypted file in Envboard'))
 
