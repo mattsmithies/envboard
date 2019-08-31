@@ -1,8 +1,9 @@
 {
   "name": "envboard",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Envboard CLI interface",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
