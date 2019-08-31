@@ -3,6 +3,7 @@
 const Axios = require('axios')
 const fs = require('fs')
 const chalk = require('chalk')
+const moment = require('moment')
 
 const { decrypt } = require('./encryption')
 const { pullRoute, deleteRoute } = require('./apiRoutes')
@@ -30,7 +31,8 @@ module.exports.process = async ({ reference, password }) => {
     return console.log('Unable to decrypt and save file');
   }
 
-  const savedFilename = filename + '-envboard'
+  const timeSuffix = moment().format('-H:m-DD-MM-YYYY')
+  const savedFilename = filename + timeSuffix
 
   console.log(chalk.green(`Decrypting file and saving to - ${savedFilename}...`))
 
