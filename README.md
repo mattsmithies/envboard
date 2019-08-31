@@ -60,6 +60,7 @@ This initial CLI tool is extremely simple, its goal is to prove the concept.
 
 ```
 npm i -g envboard
+envboard -h
 cd your_project/
 ```
 
