@@ -54,7 +54,7 @@ This initial CLI tool is extremely simple, its goal is to prove the concept.
 2) Use the **envboard** CLI tool to generate a unique key, encrypt and email the zip to a developer.
 3) Once the file has been downloaded the files will be destroyed.
 4) Manually share the key to the desired user to decrypt the files.
-5) The downloaded file will have a **-envboard** suffix to not override any sensitive files that you may already have in your project.
+5) If the file already exists the downloaded file will have a js moment timestamp prefix in the format **YYYY-MM-DD-HHmmss_** to not override any sensitive data.
 
 ### Installation
 
