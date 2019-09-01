@@ -8,6 +8,15 @@ const moment = require('moment')
 const { decrypt } = require('./encryption')
 const { pullRoute, deleteRoute } = require('./apiRoutes')
 
+const getFilename = (filename) => {
+  if(fs.existsSync(filename)) {
+    const timeSuffix = moment().format('YYYY-MM-DD-HHmmss_')
+    return timeSuffix + filename
+  }
+
+  return filename
+}
+
 module.exports.process = async ({ reference, password }) => {
 
   const params = { reference: reference.trim() }
@@ -31,8 +40,7 @@ module.exports.process = async ({ reference, password }) => {
     return console.log('Unable to decrypt and save file');
   }
 
-  const timeSuffix = moment().format('-H:m-DD-MM-YYYY')
-  const savedFilename = filename + timeSuffix
+  const savedFilename = getFilename(filename)
 
   console.log(chalk.green(`Decrypting file and saving to - ${savedFilename}...`))
 
