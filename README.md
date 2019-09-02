@@ -145,6 +145,4 @@ Currently this is a proof of concept, and has been shared with various developer
 
 I consider the password to unlock the shared file to be a low risk item, and as such I fully expect it to be shared on slack or email. It can only be used once to download and decrypt the sensitive files.
 
-Lastly, would this functionality be worth $1 a month to you?
-
-Email me for feedback or discuss [info@mattsmithies.co.uk](mailto:info@mattsmithies.co.uk)
+Email me for feedback or discuss features that would help accelerate the onboarding of new technical talent [info@mattsmithies.co.uk](mailto:info@mattsmithies.co.uk)
